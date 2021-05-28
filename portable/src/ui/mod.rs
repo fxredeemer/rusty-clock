@@ -1,7 +1,6 @@
 use crate::alarm::{Alarm, AlarmManager};
 use crate::datetime;
 use core::fmt::{self, Write};
-use embedded_graphics::coord::Coord;
 use embedded_graphics::fonts::Font8x16;
 use embedded_graphics::prelude::*;
 use epd_waveshare::epd2in9::Display2in9;

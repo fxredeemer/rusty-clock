@@ -1,4 +1,3 @@
-use embedded_graphics::coord::Coord;
 use embedded_graphics::fonts::Font8x16;
 use embedded_graphics::prelude::*;
 use epd_waveshare::epd2in9::Display2in9;
@@ -43,7 +42,7 @@ impl<'a> Header<'a> {
             Font8x16::render_str(s)
                 .with_stroke(Some(Color::Black))
                 .with_fill(Some(Color::White))
-                .translate(Coord::new(x, y))
+                .translate(Point::new(x, y))
                 .into_iter(),
         );
     }

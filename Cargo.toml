@@ -7,16 +7,16 @@ edition = "2018"
 [workspace]
 
 [dependencies]
-stm32f1xx-hal = { version = "0.5", features = ["rt", "stm32f103" ] }
-cortex-m = "0.6"
-#cortex-m-rt = { version = "0.6", features = ["device"] }
-cortex-m-rtfm = "0.5.0"
-panic-semihosting = "0.5"
-bme280 = "0.2"
-pwm-speaker = { git = "https://github.com/TeXitoi/pwm-speaker", branch = "master" }
-epd-waveshare = { version = "0.3.2", features = ["type_a_alternative_faster_lut"] }
-embedded-hal = "0.2.1"
 portable = { path = "portable" }
+stm32f1xx-hal = { version = "0.7.0", features = ["rt", "stm32f103" ] }
+cortex-m = "0.7.2"
+#cortex-m-rt = { version = "0.6", features = ["device"] }
+cortex-m-rtfm = "0.5.3"
+panic-semihosting = "0.5.6"
+bme280 = "0.2.1"
+pwm-speaker = { git = "https://github.com/TeXitoi/pwm-speaker", branch = "master" }
+epd-waveshare = { version = "0.4.0 ", features = ["type_a_alternative_faster_lut"] }
+embedded-hal = "0.2.5"
 
 [profile.dev]
 opt-level = 1

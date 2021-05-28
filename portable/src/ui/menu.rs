@@ -1,6 +1,5 @@
 use core::cmp::min;
 use core::fmt::Write;
-use embedded_graphics::coord::Coord;
 use embedded_graphics::fonts::Font8x16;
 use embedded_graphics::prelude::*;
 use epd_waveshare::epd2in9::Display2in9;
@@ -52,7 +51,7 @@ fn render_str(s: &str, x: i32, y: i32, display: &mut Display2in9) {
         Font8x16::render_str(s)
             .with_stroke(Some(Color::Black))
             .with_fill(Some(Color::White))
-            .translate(Coord::new(x, y))
+            .translate(Point::new(x, y))
             .into_iter(),
     );
 }
