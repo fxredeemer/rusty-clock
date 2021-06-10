@@ -4,15 +4,18 @@ pub enum Event {
     Released,
     Nothing,
 }
+
 #[derive(Copy, Clone)]
 enum State {
     High(u8),
     Low(u8),
 }
+
 pub struct Button<T> {
     button: T,
     state: State,
 }
+
 impl<T: ::embedded_hal::digital::v2::InputPin<Error = core::convert::Infallible>> Button<T> {
     pub fn new(button: T) -> Self {
         Button {
@@ -20,6 +23,7 @@ impl<T: ::embedded_hal::digital::v2::InputPin<Error = core::convert::Infallible>
             state: State::High(0),
         }
     }
+    
     pub fn poll(&mut self) -> Event {
         use self::State::*;
         let value = self.button.is_high().unwrap();

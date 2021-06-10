@@ -31,6 +31,35 @@ dependencies = [
 ]
 
 [[package]]
+name = "atsamd-hal"
+version = "0.12.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "868f22ff864d664efd9a0134cad0905d918f62f3b14d7761ca6d64bdcb1df96b"
+dependencies = [
+ "atsamd21g",
+ "bitfield",
+ "cortex-m 0.6.7",
+ "embedded-hal",
+ "nb 0.1.3",
+ "paste",
+ "rand_core",
+ "vcell",
+ "void",
+]
+
+[[package]]
+name = "atsamd21g"
+version = "0.9.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1d4092551cf82644de22191ad79c734adbd88df8e2b861e7b614d7e7891c83c7"
+dependencies = [
+ "bare-metal",
+ "cortex-m 0.6.7",
+ "cortex-m-rt",
+ "vcell",
+]
+
+[[package]]
 name = "autocfg"
 version = "1.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -163,15 +192,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "embedded-dma"
-version = "0.1.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "46c8c02e4347a0267ca60813c952017f4c5948c232474c6010a381a337f1bda4"
-dependencies = [
- "stable_deref_trait",
-]
-
-[[package]]
 name = "embedded-graphics"
 version = "0.6.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -198,6 +218,20 @@ checksum = "250e88835dad390d0eebc78cc28c8958e128ae9361d2b8ce7f1598b518a3c7c4"
 dependencies = [
  "embedded-graphics",
  "embedded-hal",
+]
+
+[[package]]
+name = "feather_m0"
+version = "0.9.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2340b26e52342f2ddadbaed755ecf0a7993b5a2b59912840afe06c33dd22b6a6"
+dependencies = [
+ "atsamd-hal",
+ "cortex-m 0.6.7",
+ "cortex-m-rt",
+ "embedded-hal",
+ "nb 0.1.3",
+ "panic-halt",
 ]
 
 [[package]]
@@ -301,6 +335,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "546c37ac5d9e56f55e73b677106873d9d9f5190605e41a856503623648488cae"
 
 [[package]]
+name = "panic-halt"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "de96540e0ebde571dc55c73d60ef407c653844e6f9a1e2fdbd40c07b9252d812"
+
+[[package]]
 name = "panic-semihosting"
 version = "0.5.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -309,6 +349,12 @@ dependencies = [
  "cortex-m 0.7.2",
  "cortex-m-semihosting",
 ]
+
+[[package]]
+name = "paste"
+version = "1.0.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "acbf547ad0c65e31259204bd90935776d1c693cec2f4ff7abb7a1bbbd40dfe58"
 
 [[package]]
 name = "pest"
@@ -346,7 +392,7 @@ source = "git+https://github.com/TeXitoi/pwm-speaker?branch=master#18619e1008985
 dependencies = [
  "cast",
  "cortex-m-rt",
- "stm32f1xx-hal 0.5.3",
+ "stm32f1xx-hal",
 ]
 
 [[package]]
@@ -363,6 +409,12 @@ name = "r0"
 version = "0.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e2a38df5b15c8d5c7e8654189744d8e396bddc18ad48041a500ce52d6948941f"
+
+[[package]]
+name = "rand_core"
+version = "0.5.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "90bde5296fc891b0cef12a6d03ddccc162ce7b2aff54160af9338f8d40df6d19"
 
 [[package]]
 name = "rtfm-core"
@@ -408,10 +460,10 @@ dependencies = [
  "cortex-m-rtfm",
  "embedded-hal",
  "epd-waveshare",
+ "feather_m0",
  "panic-semihosting",
  "portable",
  "pwm-speaker",
- "stm32f1xx-hal 0.7.0",
 ]
 
 [[package]]
@@ -466,18 +518,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "stm32f1"
-version = "0.11.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "849b1e8d9bcfd792c9d9178cf86165d299a661c26e35d9322ae9382d3f3fe460"
-dependencies = [
- "bare-metal",
- "cortex-m 0.6.7",
- "cortex-m-rt",
- "vcell",
-]
-
-[[package]]
 name = "stm32f1xx-hal"
 version = "0.5.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -489,23 +529,7 @@ dependencies = [
  "cortex-m-rt",
  "embedded-hal",
  "nb 0.1.3",
- "stm32f1 0.9.0",
- "void",
-]
-
-[[package]]
-name = "stm32f1xx-hal"
-version = "0.7.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bf679de34580d2f8806d9a6384c110b6df002404e1ff024cf8d567c91df4d4b2"
-dependencies = [
- "cast",
- "cortex-m 0.6.7",
- "cortex-m-rt",
- "embedded-dma",
- "embedded-hal",
- "nb 0.1.3",
- "stm32f1 0.11.0",
+ "stm32f1",
  "void",
 ]
 

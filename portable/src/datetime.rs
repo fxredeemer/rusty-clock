@@ -1,5 +1,6 @@
 static DAYS_IN_MONTH: [u32; 12] = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 static DAYS_IN_MONTH_LEAP_YEAR: [u32; 12] = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
 fn days_in_month(is_leap_year: bool) -> &'static [u32; 12] {
     if is_leap_year {
         &DAYS_IN_MONTH_LEAP_YEAR
@@ -7,6 +8,7 @@ fn days_in_month(is_leap_year: bool) -> &'static [u32; 12] {
         &DAYS_IN_MONTH
     }
 }
+
 fn is_leap(year: u16) -> bool {
     if year % 4 != 0 {
         false
@@ -27,6 +29,7 @@ pub enum DayOfWeek {
     Saturday,
     Sunday,
 }
+
 impl DayOfWeek {
     pub fn from_days_since_epoch(days: u32) -> DayOfWeek {
         use self::DayOfWeek::*;
@@ -54,6 +57,7 @@ impl DayOfWeek {
         }
     }
 }
+
 impl ::core::fmt::Display for DayOfWeek {
     fn fmt(&self, f: &mut ::core::fmt::Formatter) -> Result<(), ::core::fmt::Error> {
         write!(f, "{:?}", self)

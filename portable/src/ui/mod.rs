@@ -1,12 +1,14 @@
 use crate::alarm::{Alarm, AlarmManager};
 use crate::datetime;
 use core::fmt::{self, Write};
-use embedded_graphics::fonts::Font8x16;
+use embedded_graphics::fonts::{Font8x16, Text};
+use embedded_graphics::pixelcolor::BinaryColor;
 use embedded_graphics::prelude::*;
+use embedded_graphics::style::TextStyle;
 use epd_waveshare::epd2in9::Display2in9;
 use epd_waveshare::graphics::Display;
-use epd_waveshare::prelude::{Color, DisplayRotation};
-use heapless::{consts::*, String, Vec};
+use epd_waveshare::prelude::DisplayRotation;
+use heapless::{String, Vec};
 
 mod header;
 mod menu;
@@ -62,7 +64,8 @@ impl Model {
             screen: state::Screen::Clock,
         }
     }
-    pub fn update(&mut self, msg: Msg) -> Vec<Cmd, U4> {
+
+    pub fn update(&mut self, msg: Msg) -> Vec<Cmd, 4> {
         use self::state::Screen::*;
         let mut cmds = Vec::new();
 
@@ -149,6 +152,7 @@ impl Model {
         }
         cmds
     }
+
     pub fn view(&self) -> Display2in9 {
         let mut display = Display2in9::default();
         display.set_rotation(DisplayRotation::Rotate270);
@@ -166,14 +170,16 @@ impl Model {
 
         display
     }
+
     fn update_last_input(&mut self) {
         if let Some(epoch) = self.now.to_epoch() {
             self.last_input = epoch;
         }
     }
+
     fn render_header(&self, display: &mut Display2in9) {
         let mut header = header::Header::new(display);
-        let mut s: String<U128> = String::new();
+        let mut s: String<128> = String::new();
 
         write!(
             s,
@@ -206,6 +212,7 @@ impl Model {
         write!(s, "{}°C", Centi(i32::from(self.env.temperature))).unwrap();
         header.top_right(&s);
     }
+
     fn render_clock(&self, display: &mut Display2in9) {
         let mut seven = seven_segments::SevenSegments::new(display, 0, 18);
 
@@ -224,21 +231,21 @@ impl Model {
         seven.digit(self.now.min % 10);
 
         let display = seven.into_display();
-        let mut s: String<U4> = String::new();
-        write!(s, ":{:02}", self.now.sec).unwrap();
-        display.draw(
-            Font8x16::render_str(&s)
-                .with_stroke(Some(Color::Black))
-                .with_fill(Some(Color::White))
-                .translate(Coord::new(296 - 3 * 8, 17))
-                .into_iter(),
-        );
+        let mut text: String<4> = String::new();
+        write!(text, ":{:02}", self.now.sec).unwrap();
+ 
+        Text::new(&text, Point::new(296 - 3 * 8, 17))
+            .into_styled(TextStyle::new(Font8x16, BinaryColor::On))
+            .draw(display)
+            .unwrap();
     }
+
     fn render_menu(&self, elt: state::MenuElt, display: &mut Display2in9) {
         menu::render("Menu:", elt.items(), elt as i32, display);
     }
+
     fn render_set_clock(&self, dt: &state::EditDateTime, display: &mut Display2in9) {
-        let mut title: String<U128> = String::new();
+        let mut title: String<128> = String::new();
         write!(
             title,
             "Edit: {:04}-{:02}-{:02} {:02}:{:02}",
@@ -247,18 +254,19 @@ impl Model {
         .unwrap();
         menu::render(&title, &[dt.as_edit_str()], 0, display);
     }
+
     fn render_manage_alarms(&self, i: usize, display: &mut Display2in9) {
-        let v: Vec<_, U5> = self
+        let v: Vec<_, 5> = self
             .alarm_manager
             .alarms
             .iter()
             .map(|a| {
-                let mut s = String::<U40>::new();
+                let mut s = String::<40>::new();
                 write!(s, "{}", a).unwrap();
                 s
             })
             .collect();
-        let v: Vec<&str, U5> = v.iter().map(|s| s.as_str()).collect();
+        let v: Vec<&str, 5> = v.iter().map(|s| s.as_str()).collect();
         menu::render("Select alarm:", &v, i as i32, display);
     }
 }

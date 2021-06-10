@@ -1,10 +1,11 @@
 use core::cmp::min;
 use core::fmt::Write;
-use embedded_graphics::fonts::Font8x16;
+use embedded_graphics::fonts::{Font8x16, Text};
+use embedded_graphics::pixelcolor::BinaryColor;
 use embedded_graphics::prelude::*;
+use embedded_graphics::style::TextStyle;
 use epd_waveshare::epd2in9::Display2in9;
-use epd_waveshare::prelude::Color;
-use heapless::{consts::*, String};
+use heapless::String;
 
 const MARGIN_TOP: i32 = 16;
 const MARGIN_LEFT: i32 = 4;
@@ -20,7 +21,7 @@ pub fn render(title: &str, mut items: &[&str], mut selected: i32, display: &mut 
         selected %= 5;
         items = &items[page * 5..min(page * 5 + 5, len)];
 
-        let mut s = String::<U5>::new();
+        let mut s = String::<5>::new();
         write!(s, "{}/{}", page + 1, (len - 1) / 5 + 1).unwrap();
         render_str(
             &s,
@@ -47,11 +48,8 @@ pub fn render(title: &str, mut items: &[&str], mut selected: i32, display: &mut 
 }
 
 fn render_str(s: &str, x: i32, y: i32, display: &mut Display2in9) {
-    display.draw(
-        Font8x16::render_str(s)
-            .with_stroke(Some(Color::Black))
-            .with_fill(Some(Color::White))
-            .translate(Point::new(x, y))
-            .into_iter(),
-    );
+    Text::new(&s, Point::new(x, y))
+        .into_styled(TextStyle::new(Font8x16, BinaryColor::On))
+        .draw(display)
+        .unwrap();
 }

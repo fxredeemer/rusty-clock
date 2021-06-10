@@ -6,6 +6,7 @@ use core::fmt;
 pub struct AlarmManager {
     pub alarms: [Alarm; 5],
 }
+
 impl Default for AlarmManager {
     fn default() -> Self {
         Self {
@@ -19,6 +20,7 @@ impl Default for AlarmManager {
         }
     }
 }
+
 impl AlarmManager {
     pub fn must_ring(&mut self, datetime: &DateTime) -> bool {
         self.alarms
@@ -72,11 +74,13 @@ bitflags! {
         const ONE_TIME =  0b1000_0000;
     }
 }
+
 impl Default for Mode {
     fn default() -> Self {
         Self::all() - Mode::SATURDAY - Mode::SUNDAY
     }
 }
+
 impl Mode {
     pub fn contains_dow(self, dow: DayOfWeek) -> bool {
         use self::DayOfWeek::*;
@@ -102,21 +106,26 @@ impl Default for Alarm {
         }
     }
 }
+
 impl Alarm {
     pub fn hour(&self) -> u8 {
         self.hour
     }
+
     pub fn set_hour(&mut self, h: u8) {
         assert!(h < 24);
         self.hour = h;
     }
+
     pub fn min(&self) -> u8 {
         self.min
     }
+
     pub fn set_min(&mut self, m: u8) {
         assert!(m < 60);
         self.min = m;
     }
+
     pub fn must_ring(&mut self, datetime: &DateTime) -> bool {
         if !self.is_enable {
             return false;
@@ -131,18 +140,22 @@ impl Alarm {
             self.mode.contains_dow(datetime.day_of_week)
         }
     }
+
     pub fn next_ring(&self, datetime: &DateTime) -> Option<(DayOfWeek, u8, u8)> {
         if !self.is_enable || self.mode.is_empty() {
             return None;
         }
+
         let mut day = if time(self.hour, self.min) <= time(datetime.hour, datetime.min) {
             datetime.day_of_week.next()
         } else {
             datetime.day_of_week
         };
+
         if self.mode.contains(Mode::ONE_TIME) {
             return Some((day, self.hour, self.min));
         }
+
         loop {
             if self.mode.contains_dow(day) {
                 return Some((day, self.hour, self.min));
@@ -150,6 +163,7 @@ impl Alarm {
             day = day.next();
         }
     }
+
     pub fn as_u32(&self) -> u32 {
         self.mode.bits() as u32
             | (self.min as u32) << 8
@@ -157,6 +171,7 @@ impl Alarm {
             | (self.is_enable as u32) << 24
             | 1 << 25
     }
+
     pub fn try_from(u: u32) -> Option<Self> {
         if u >> 25 != 1 {
             return None;
@@ -173,6 +188,7 @@ impl Alarm {
         Some(res)
     }
 }
+
 impl fmt::Display for Alarm {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         if self.is_enable {
@@ -205,6 +221,7 @@ static VEC_DAY_OF_WEEK_SHORT_NAME: [(Mode, &str); 7] = [
     (Mode::SATURDAY, " Sa"),
     (Mode::SUNDAY, " Su"),
 ];
+
 fn time(hour: u8, min: u8) -> u32 {
     u32::from(hour) * 60 + u32::from(min)
 }
