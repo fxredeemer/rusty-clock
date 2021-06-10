@@ -13,6 +13,7 @@ pub struct SevenSegments<'a> {
     x: i32,
     y: i32,
 }
+
 impl<'a> SevenSegments<'a> {
     pub fn new(display: &'a mut Display2in9, x: i32, y: i32) -> Self {
         Self {

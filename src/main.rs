@@ -10,41 +10,26 @@ use portable::datetime::DateTime;
 use portable::{alarm, button, datetime, ui};
 use pwm_speaker::songs::SO_WHAT;
 use rtfm::app;
-use stm32f1xx_hal::prelude::*;
-use stm32f1xx_hal::{delay, gpio, i2c, rtc, spi, stm32, timer};
+
+use feather_m0 as bsp;
+use atsamd_hal as hal;
+use bsp::pac;
+
+use bsp::entry;
+use hal::clock::{enable_internal_32kosc, ClockGenId, ClockSource, GenericClockController};
+use hal::{prelude::*, timer};
+use hal::rtc;
+use hal::sleeping_delay::SleepingDelay;
+use pac::{interrupt, CorePeripherals, Peripherals, RTC};
+
+
+
 
 mod sound;
 
-type I2C = i2c::BlockingI2c<
-    stm32::I2C1,
-    (
-        gpio::gpiob::PB6<gpio::Alternate<gpio::OpenDrain>>,
-        gpio::gpiob::PB7<gpio::Alternate<gpio::OpenDrain>>,
-    ),
->;
-type Button0Pin = gpio::gpioa::PA6<gpio::Input<gpio::PullUp>>;
-type Button1Pin = gpio::gpioa::PA7<gpio::Input<gpio::PullUp>>;
-type Button2Pin = gpio::gpiob::PB0<gpio::Input<gpio::PullUp>>;
-type Button3Pin = gpio::gpiob::PB1<gpio::Input<gpio::PullUp>>;
-type Spi = spi::Spi<
-    stm32::SPI2,
-    stm32f1xx_hal::spi::Spi2NoRemap,
-    (
-        gpio::gpiob::PB13<gpio::Alternate<gpio::PushPull>>,
-        gpio::gpiob::PB14<gpio::Input<gpio::Floating>>,
-        gpio::gpiob::PB15<gpio::Alternate<gpio::PushPull>>,
-    ),
->;
-type EPaperDisplay = epd_waveshare::epd2in9::EPD2in9<
-    Spi,
-    OldOutputPin<gpio::gpiob::PB12<gpio::Output<gpio::PushPull>>>, // cs/nss
-    OldInputPin<gpio::gpioa::PA10<gpio::Input<gpio::Floating>>>,   // busy
-    OldOutputPin<gpio::gpioa::PA8<gpio::Output<gpio::PushPull>>>,  // dc
-    OldOutputPin<gpio::gpioa::PA9<gpio::Output<gpio::PushPull>>>,  // rst
->;
-
 #[app(device = stm32f1xx_hal::stm32, peripherals = true)]
 const APP: () = {
+
     struct Resources {
         rtc_dev: rtc::Rtc,
         bme280: bme280::BME280<I2C, delay::Delay>,
@@ -59,8 +44,8 @@ const APP: () = {
         ui: ui::Model,
         #[init(true)]
         full_update: bool,
-        timer: timer::CountDownTimer<stm32::TIM3>,
-        backup_domain: stm32f1xx_hal::backup_domain::BackupDomain,
+        timer: timer::CountDownTimer<TIM3>,
+        backup_domain: hal::backup_domain::BackupDomain,
     }
 
     #[init(spawn = [msg])]
@@ -99,7 +84,7 @@ const APP: () = {
         let mut backup_domain = rcc
             .bkp
             .constrain(c.device.BKP, &mut rcc.apb1, &mut c.device.PWR);
-        let mut rtc_dev = rtc::Rtc::rtc(c.device.RTC, &mut backup_domain);
+        let mut rtc_dev = rtc::Rtc::new(c.device.RTC, &mut backup_domain, asd);
         if rtc_dev.current_time() < 100 {
             let today = DateTime {
                 year: 2020,
@@ -138,6 +123,7 @@ const APP: () = {
             clocks,
             &mut rcc.apb1,
         );
+        
         let mut il3820 = epd_waveshare::epd2in9::EPD2in9::new(
             &mut spi,
             gpiob.pb12.into_push_pull_output(&mut gpiob.crh).into(),
