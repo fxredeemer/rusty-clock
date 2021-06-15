@@ -26,7 +26,7 @@ use pac::{interrupt, CorePeripherals, Peripherals, RTC};
 
 
 mod sound;
-
+/*
 #[app(device = stm32f1xx_hal::stm32, peripherals = true)]
 const APP: () = {
 
@@ -293,3 +293,4 @@ const APP: () = {
         fn EXTI2();
     }
 };
+*/

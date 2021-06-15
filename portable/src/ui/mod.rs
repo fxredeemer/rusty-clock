@@ -5,7 +5,7 @@ use embedded_graphics::fonts::{Font8x16, Text};
 use embedded_graphics::pixelcolor::BinaryColor;
 use embedded_graphics::prelude::*;
 use embedded_graphics::style::TextStyle;
-use epd_waveshare::epd2in9::Display2in9;
+use epd_waveshare::epd2in9bc::Display2in9bc;
 use epd_waveshare::graphics::Display;
 use epd_waveshare::prelude::DisplayRotation;
 use heapless::{String, Vec};
@@ -153,8 +153,8 @@ impl Model {
         cmds
     }
 
-    pub fn view(&self) -> Display2in9 {
-        let mut display = Display2in9::default();
+    pub fn view(&self) -> Display2in9bc {
+        let mut display = Display2in9bc::default();
         display.set_rotation(DisplayRotation::Rotate270);
 
         self.render_header(&mut display);
@@ -177,7 +177,7 @@ impl Model {
         }
     }
 
-    fn render_header(&self, display: &mut Display2in9) {
+    fn render_header(&self, display: &mut Display2in9bc) {
         let mut header = header::Header::new(display);
         let mut s: String<128> = String::new();
 
@@ -213,7 +213,7 @@ impl Model {
         header.top_right(&s);
     }
 
-    fn render_clock(&self, display: &mut Display2in9) {
+    fn render_clock(&self, display: &mut Display2in9bc) {
         let mut seven = seven_segments::SevenSegments::new(display, 0, 18);
 
         if self.now.hour >= 10 {
@@ -240,11 +240,11 @@ impl Model {
             .unwrap();
     }
 
-    fn render_menu(&self, elt: state::MenuElt, display: &mut Display2in9) {
+    fn render_menu(&self, elt: state::MenuElt, display: &mut Display2in9bc) {
         menu::render("Menu:", elt.items(), elt as i32, display);
     }
 
-    fn render_set_clock(&self, dt: &state::EditDateTime, display: &mut Display2in9) {
+    fn render_set_clock(&self, dt: &state::EditDateTime, display: &mut Display2in9bc) {
         let mut title: String<128> = String::new();
         write!(
             title,
@@ -255,7 +255,7 @@ impl Model {
         menu::render(&title, &[dt.as_edit_str()], 0, display);
     }
 
-    fn render_manage_alarms(&self, i: usize, display: &mut Display2in9) {
+    fn render_manage_alarms(&self, i: usize, display: &mut Display2in9bc) {
         let v: Vec<_, 5> = self
             .alarm_manager
             .alarms

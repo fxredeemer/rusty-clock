@@ -2,7 +2,7 @@ use super::{menu, Cmd};
 use crate::alarm::{Alarm, AlarmManager, Mode};
 use crate::datetime;
 use core::fmt::Write;
-use epd_waveshare::epd2in9::Display2in9;
+use epd_waveshare::epd2in9bc::Display2in9bc;
 use heapless::{String, Vec};
 
 macro_rules! manage_str {
@@ -188,7 +188,7 @@ impl ManageAlarm {
         }
     }
 
-    pub fn render(&self, display: &mut Display2in9) {
+    pub fn render(&self, display: &mut Display2in9bc) {
         self.state.render(&self.alarm, display);
     }
 }
@@ -266,7 +266,7 @@ impl ManageAlarmState {
         }
     }
 
-    pub fn render(self, alarm: &Alarm, display: &mut Display2in9) {
+    pub fn render(self, alarm: &Alarm, display: &mut Display2in9bc) {
         use self::ManageAlarmState::*;
 
         let mut title = String::<40>::new();

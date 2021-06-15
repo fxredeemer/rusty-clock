@@ -2,7 +2,7 @@ use embedded_graphics::fonts::{Font8x16, Text};
 use embedded_graphics::pixelcolor::BinaryColor;
 use embedded_graphics::prelude::*;
 use embedded_graphics::style::TextStyle;
-use epd_waveshare::epd2in9::Display2in9;
+use epd_waveshare::epd2in9bc::Display2in9bc;
 
 const MARGIN: i32 = 0;
 const FONT_HEIGHT: i32 = 16;
@@ -10,11 +10,11 @@ const FONT_WIDTH: i32 = 8;
 const BOTTOM_Y: i32 = 128 - MARGIN - FONT_HEIGHT;
 
 pub struct Header<'a> {
-    display: &'a mut Display2in9,
+    display: &'a mut Display2in9bc,
 }
 
 impl<'a> Header<'a> {
-    pub fn new(display: &'a mut Display2in9) -> Self {
+    pub fn new(display: &'a mut Display2in9bc) -> Self {
         Self { display }
     }
 

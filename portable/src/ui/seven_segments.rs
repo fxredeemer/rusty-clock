@@ -2,10 +2,10 @@ use embedded_graphics::pixelcolor::BinaryColor;
 use embedded_graphics::prelude::*;
 use embedded_graphics::primitives::Rectangle;
 use embedded_graphics::style::PrimitiveStyleBuilder;
-use epd_waveshare::epd2in9::Display2in9;
+use epd_waveshare::epd2in9bc::Display2in9bc;
 
 pub struct SevenSegments<'a> {
-    display: &'a mut Display2in9,
+    display: &'a mut Display2in9bc,
     width: i32,
     height: i32,
     thickness: i32,
@@ -15,7 +15,7 @@ pub struct SevenSegments<'a> {
 }
 
 impl<'a> SevenSegments<'a> {
-    pub fn new(display: &'a mut Display2in9, x: i32, y: i32) -> Self {
+    pub fn new(display: &'a mut Display2in9bc, x: i32, y: i32) -> Self {
         Self {
             display,
             width: 52,
@@ -27,7 +27,7 @@ impl<'a> SevenSegments<'a> {
         }
     }
 
-    pub fn into_display(self) -> &'a mut Display2in9 {
+    pub fn into_display(self) -> &'a mut Display2in9bc {
         self.display
     }
 

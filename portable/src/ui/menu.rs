@@ -4,7 +4,7 @@ use embedded_graphics::fonts::{Font8x16, Text};
 use embedded_graphics::pixelcolor::BinaryColor;
 use embedded_graphics::prelude::*;
 use embedded_graphics::style::TextStyle;
-use epd_waveshare::epd2in9::Display2in9;
+use epd_waveshare::epd2in9bc::Display2in9bc;
 use heapless::String;
 
 const MARGIN_TOP: i32 = 16;
@@ -12,7 +12,7 @@ const MARGIN_LEFT: i32 = 4;
 const FONT_WIDTH: i32 = 8;
 const INTERLINE: i32 = 16;
 
-pub fn render(title: &str, mut items: &[&str], mut selected: i32, display: &mut Display2in9) {
+pub fn render(title: &str, mut items: &[&str], mut selected: i32, display: &mut Display2in9bc) {
     render_str(title, MARGIN_LEFT, MARGIN_TOP, display);
 
     let len = items.len();
@@ -47,7 +47,7 @@ pub fn render(title: &str, mut items: &[&str], mut selected: i32, display: &mut 
     );
 }
 
-fn render_str(s: &str, x: i32, y: i32, display: &mut Display2in9) {
+fn render_str(s: &str, x: i32, y: i32, display: &mut Display2in9bc) {
     Text::new(&s, Point::new(x, y))
         .into_styled(TextStyle::new(Font8x16, BinaryColor::On))
         .draw(display)
