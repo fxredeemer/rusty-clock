@@ -8,5 +8,5 @@ edition = "2018"
 bitflags = "1.2.1"
 embedded-graphics = "0.6.1"
 heapless = "0.7.1"
-epd-waveshare = { version = "0.4.0", features = ["type_a_alternative_faster_lut"] }
+epd-waveshare = "0.4.0"
 embedded-hal = { version = "0.2.5", features = ["unproven"] }
