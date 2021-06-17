@@ -16,7 +16,8 @@ pub struct Button<T> {
     state: State,
 }
 
-impl<T: ::embedded_hal::digital::v2::InputPin<Error = ()>> Button<T> {
+
+impl<T: ::embedded_hal::digital::v2::InputPin<Error = ()> > Button<T> {
     pub fn new(button: T) -> Self {
         Button {
             button,
